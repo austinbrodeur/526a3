@@ -5,6 +5,7 @@
 #include <errno.h>
 #include <netinet/tcp.h>
 #include <netinet/ip.h>
+#include <arpa/inet.h>
 
 struct pseudo_header
 {
@@ -72,14 +73,14 @@ int main()
     // Address resolution
     strcpy(source_ip, "192.168.1.1");
     sin.sin_family = AF_INET;
-    sin.sin_port = hton(80);
+    sin.sin_port = htons(80);
     sin.sin_addr.s_addr = inet_addr("1.2.3.4");
 
     // Fill IP header
     iph->ihl = 5;
     iph->version = 4;
     iph->tos = 0;
-    iph->tot_len = sizeof (struct iphdr) + (struct tcphdr) + strlen(data);
+    iph->tot_len = sizeof (struct iphdr) + sizeof (struct tcphdr) + strlen(data);
     iph->id = htonl (54321);
     iph->frag_off = 0;
     iph->ttl = 255;
@@ -89,7 +90,7 @@ int main()
     iph->daddr = sin.sin_addr.s_addr;
 
     // IP Checksum
-    iph->check = csum ((unsigned short *) datagram, iph->tot_lenl);
+    iph->check = csum ((unsigned short *) datagram, iph->tot_len);
 
     //TCP header
     tcph->source = htons(1234);
@@ -124,7 +125,7 @@ int main()
 
     // IP_HDRINCL to tell
     int one = 1;
-    cont int *val = &one;
+    const int *val = &one;
 
     if (setsockopt(s, IPPROTO_IP, IP_HDRINCL, val, sizeof(one)) < 0)
     {
