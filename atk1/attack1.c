@@ -1,3 +1,12 @@
+/*
+
+Austin Brodeur 30007952
+
+This code is a modified version of the code found at https://www.binarytides.com/raw-sockets-c-code-linux/
+
+*/
+
+
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -52,17 +61,18 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    if (argc != 3)
+    if (argc != 4)
     {
-        printf("usage: out_address port");
+        printf("usage: source_address dest_address port");
+        exit(1);
     }
 
     // datagram to represent the packet
-    char datagram[4096], source_ip[32], *data, *pseudogram, *out_adr;
+    char datagram[4096], source_ip[32], *data, *pseudogram, *dest_adr;
     int port;
 
     // assign port and out adr from command line args
-    out_adr = argv[1];
+    dest_adr = argv[1];
     port = atoi(argv[2]);
 
     // zero out the packet buffer
@@ -84,7 +94,7 @@ int main(int argc, char *argv[])
     strcpy(source_ip, "192.168.1.44");
     sin.sin_family = AF_INET;
     sin.sin_port = htons(port);
-    sin.sin_addr.s_addr = inet_addr(out_adr);
+    sin.sin_addr.s_addr = inet_addr(dest_adr);
 
     // Fill IP header
     iph->ihl = 5;

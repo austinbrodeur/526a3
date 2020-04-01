@@ -9,7 +9,7 @@
 #include <sys/socket.h> // sockets
 #include <arpa/inet.h> // internet operations
 
-#define PORT "7952" // port
+#define PORT "37952" // port
 #define MAXDATASIZE 100 // max num of bytes
 
 /*
