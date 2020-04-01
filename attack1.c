@@ -42,7 +42,7 @@ unsigned short csum(unsigned short *ptr, int nbytes)
     return (answer);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     int s = socket (PF_INET, SOCK_RAW, IPPROTO_TCP);
 
@@ -52,8 +52,18 @@ int main()
         exit(1);
     }
 
+    if (argc != 3)
+    {
+        printf("usage: out_address port");
+    }
+
     // datagram to represent the packet
-    char datagram[4096], source_ip[32], *data, *pseudogram;
+    char datagram[4096], source_ip[32], *data, *pseudogram, *out_adr;
+    int port;
+
+    // assign port and out adr from command line args
+    out_adr = argv[1];
+    port = atoi(argv[2]);
 
     // zero out the packet buffer
     memset (datagram, 0, 4096);
@@ -71,10 +81,10 @@ int main()
     strcpy(data, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
     // Address resolution
-    strcpy(source_ip, "192.168.1.1");
+    strcpy(source_ip, "192.168.1.44");
     sin.sin_family = AF_INET;
-    sin.sin_port = htons(80);
-    sin.sin_addr.s_addr = inet_addr("1.2.3.4");
+    sin.sin_port = htons(port);
+    sin.sin_addr.s_addr = inet_addr(out_adr);
 
     // Fill IP header
     iph->ihl = 5;
@@ -93,8 +103,8 @@ int main()
     iph->check = csum ((unsigned short *) datagram, iph->tot_len);
 
     //TCP header
-    tcph->source = htons(1234);
-    tcph->dest = htons(80);
+    tcph->source = htons(port);
+    tcph->dest = htons(port);
     tcph->seq = 0;
     tcph->ack_seq = 0;
     tcph->doff = 5; // tcp header size
