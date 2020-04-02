@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     // Address resolution
     strcpy(source_ip, source_adr);
     sin.sin_family = AF_INET;
-    sin.sin_port = htons(port);
+    sin.sin_port = htons(54321);
     sin.sin_addr.s_addr = inet_addr(dest_adr);
 
     // Fill IP header
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
     iph->version = 4;
     iph->tos = 0;
     iph->tot_len = sizeof (struct iphdr) + sizeof (struct tcphdr) + strlen(data);
-    iph->id = htonl (54321);
+    iph->id = htonl (0);
     iph->frag_off = 0;
     iph->ttl = 255;
     iph->protocol = IPPROTO_TCP;
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
     iph->check = csum ((unsigned short *) datagram, iph->tot_len);
 
     //TCP header
-    tcph->source = htons(port);
+    tcph->source = htons(54321);
     tcph->dest = htons(port);
     tcph->seq = 0;
     tcph->ack_seq = 0;

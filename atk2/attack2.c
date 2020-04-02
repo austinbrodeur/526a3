@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
     // Address resolution
     strcpy(source_ip, source_adr);
     sin.sin_family = AF_INET;
-    sin.sin_port = htons(port);
+    sin.sin_port = htons(54321);
     sin.sin_addr.s_addr = inet_addr(dest_adr);
 
     // Fill IP header
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     iph->version = 4;
     iph->tos = 0;
     iph->tot_len = sizeof (struct iphdr) + sizeof (struct tcphdr) + strlen(data);
-    iph->id = htonl (54321);
+    iph->id = htonl (0);
     iph->frag_off = 0;
     iph->ttl = 255;
     iph->protocol = IPPROTO_TCP;
@@ -115,18 +115,18 @@ int main(int argc, char *argv[])
     iph->check = csum ((unsigned short *) datagram, iph->tot_len);
 
     //TCP header
-    tcph->source = htons(port);
+    tcph->source = htons(54321);
     tcph->dest = htons(port);
-    tcph->seq = 0; // seq number 1, as handshake has already been done
-    tcph->ack_seq = 0; // ack number also now 1
+    tcph->seq = 1;
+    tcph->ack_seq = 1;
     tcph->doff = 5; // tcp header size
     tcph->fin = 0;
     tcph->syn = 0;
     tcph->rst = 1; // reset the connection
     tcph->psh = 0;
-    tcph->ack = 0;
+    tcph->ack = 1;
     tcph->urg = 0;
-    tcph->window = htons(5840); // max allowed window size
+    tcph->window = htons(0); // max allowed window size
     tcph->check = 0;
     tcph->urg_ptr = 0;
 

@@ -92,8 +92,6 @@ int main(void)
         exit(1);
     }
 
-    sleep(10); // added wait for attack 2 denial of service
-
     if (listen(sockfd, BACKLOG) == -1) {
         perror("listen");
         exit(1);
@@ -110,6 +108,9 @@ int main(void)
     printf("server: waiting for connections...\n");
 
     while(1) {  // main accept() loop
+
+        sleep(10); // added wait for attack 2 denial of service
+
         sin_size = sizeof their_addr;
         new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &sin_size);
         if (new_fd == -1) {
