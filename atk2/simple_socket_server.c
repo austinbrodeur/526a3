@@ -114,11 +114,11 @@ int main(void)
             perror("accept");
             continue;
         }
+        sleep(10); // added wait for attack 2 denial of service
 
         inet_ntop(their_addr.ss_family,
             get_in_addr((struct sockaddr *)&their_addr),
             s, sizeof s);
-        sleep(10); // added wait for attack 2 denial of service
         printf("server: got connection from %s\n", s);
 
         if (!fork()) { // this is the child process
