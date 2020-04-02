@@ -68,10 +68,11 @@ int main(int argc, char *argv[])
     }
 
     // datagram to represent the packet
-    char datagram[4096], source_ip[32], *data, *pseudogram, *dest_adr;
+    char datagram[4096], source_ip[32], *data, *pseudogram, *dest_adr, *source_adr;
     int port;
 
     // assign port and out adr from command line args
+    source_adr = argv[1];
     dest_adr = argv[2];
     port = atoi(argv[3]);
 

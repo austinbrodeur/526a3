@@ -68,12 +68,13 @@ int main(int argc, char *argv[])
     }
 
     // datagram to represent the packet
-    char datagram[4096], source_ip[32], *data, *pseudogram, *dest_adr;
+    char datagram[4096], source_ip[32], *data, *pseudogram, *dest_adr, *source_adr;
     int port;
 
     // assign port and out adr from command line args
-    dest_adr = argv[1];
-    port = atoi(argv[2]);
+    source_adr = argv[1];
+    dest_adr = argv[2];
+    port = atoi(argv[3]);
 
     // zero out the packet buffer
     memset (datagram, 0, 4096);
@@ -91,7 +92,7 @@ int main(int argc, char *argv[])
     strcpy(data, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
     // Address resolution
-    strcpy(source_ip, "192.168.1.44");
+    strcpy(source_ip, source_adr);
     sin.sin_family = AF_INET;
     sin.sin_port = htons(port);
     sin.sin_addr.s_addr = inet_addr(dest_adr);
