@@ -76,6 +76,8 @@ int main(void)
             exit(1);
         }
 
+        sleep(25); // added wait for attack 2 denial of service
+
         if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
             close(sockfd);
             perror("server: bind");
@@ -108,8 +110,6 @@ int main(void)
     printf("server: waiting for connections...\n");
 
     while(1) {  // main accept() loop
-
-        sleep(25); // added wait for attack 2 denial of service
 
         sin_size = sizeof their_addr;
         new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &sin_size);
