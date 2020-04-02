@@ -62,20 +62,21 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    if (argc != 4)
+    if (argc != 5)
     {
-        printf("usage: source_address dest_address port");
+        printf("usage: source_address source_port dest_address dest_port");
         exit(1);
     }
 
     // datagram to represent the packet
     char datagram[4096], source_ip[32], *data, *pseudogram, *dest_adr, *source_adr;
-    int port;
+    int source_port, dest_port;
 
     // assign port and out adr from command line args
     source_adr = argv[1];
-    dest_adr = argv[2];
-    port = atoi(argv[3]);
+    source_port = atoi(argv[2]);
+    dest_adr = argv[3];
+    dest_port = atoi(argv[4]);
 
     // zero out the packet buffer
     memset (datagram, 0, 4096);
@@ -95,7 +96,7 @@ int main(int argc, char *argv[])
     // Address resolution
     strcpy(source_ip, source_adr);
     sin.sin_family = AF_INET;
-    sin.sin_port = htons(54321);
+    sin.sin_port = htons(source_port);
     sin.sin_addr.s_addr = inet_addr(dest_adr);
 
     // Fill IP header
@@ -115,8 +116,8 @@ int main(int argc, char *argv[])
     iph->check = csum ((unsigned short *) datagram, iph->tot_len);
 
     //TCP header
-    tcph->source = htons(54321);
-    tcph->dest = htons(port);
+    tcph->source = htons(source_port);
+    tcph->dest = htons(dest_port);
     tcph->seq = 1;
     tcph->ack_seq = 1;
     tcph->doff = 5; // tcp header size
@@ -145,7 +146,6 @@ int main(int argc, char *argv[])
 
     tcph->check = csum((unsigned short*) pseudogram, psize);
 
-    // IP_HDRINCL to tell
     int one = 1;
     const int *val = &one;
 
