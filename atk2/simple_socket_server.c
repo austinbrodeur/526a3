@@ -97,6 +97,8 @@ int main(void)
         exit(1);
     }
 
+    sleep(10); // added wait for attack 2 denial of service
+
     sa.sa_handler = sigchld_handler; // reap all dead processes
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = SA_RESTART;
@@ -106,8 +108,6 @@ int main(void)
     }
 
     printf("server: waiting for connections...\n");
-
-    sleep(10); // added wait for attack 2 denial of service
 
     while(1) {  // main accept() loop
         sin_size = sizeof their_addr;
