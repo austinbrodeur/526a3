@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 
     // Data content
     data = datagram + sizeof(struct iphdr) + sizeof(struct tcphdr);
-    strcpy(data, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    strcpy(data, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"); // arbitrary data
 
     // Address resolution
     strcpy(source_ip, source_adr);

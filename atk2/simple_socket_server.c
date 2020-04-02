@@ -92,12 +92,12 @@ int main(void)
         exit(1);
     }
 
-    sleep(10); // added wait for attack 2 denial of service
-
     if (listen(sockfd, BACKLOG) == -1) {
         perror("listen");
         exit(1);
     }
+
+    sleep(10); // added wait for attack 2 denial of service
 
     sa.sa_handler = sigchld_handler; // reap all dead processes
     sigemptyset(&sa.sa_mask);
