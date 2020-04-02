@@ -72,8 +72,8 @@ int main(int argc, char *argv[])
     int port;
 
     // assign port and out adr from command line args
-    dest_adr = argv[1];
-    port = atoi(argv[2]);
+    dest_adr = argv[2];
+    port = atoi(argv[3]);
 
     // zero out the packet buffer
     memset (datagram, 0, 4096);
@@ -115,14 +115,14 @@ int main(int argc, char *argv[])
     //TCP header
     tcph->source = htons(port);
     tcph->dest = htons(port);
-    tcph->seq = 0;
-    tcph->ack_seq = 0;
+    tcph->seq = 1; // seq number 1, as handshake has already been done
+    tcph->ack_seq = 1; // ack number also now 1
     tcph->doff = 5; // tcp header size
     tcph->fin = 0;
     tcph->syn = 0;
-    tcph->rst = 1;
+    tcph->rst = 1; // reset the connection
     tcph->psh = 0;
-    tcph->ack = 0;
+    tcph->ack = 1;
     tcph->urg = 0;
     tcph->window = htons(5840); // max allowed window size
     tcph->check = 0;
