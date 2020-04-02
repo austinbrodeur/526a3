@@ -64,8 +64,6 @@ int main(void)
     // loop through all the results and bind to the first we can
     for(p = servinfo; p != NULL; p = p->ai_next) {
 
-        sleep(10); // added wait for attack 2 denial of service
-
         if ((sockfd = socket(p->ai_family, p->ai_socktype,
                 p->ai_protocol)) == -1) {
             perror("server: socket");
@@ -108,6 +106,8 @@ int main(void)
     }
 
     printf("server: waiting for connections...\n");
+
+    sleep(10); // added wait for attack 2 denial of service
 
     while(1) {  // main accept() loop
         sin_size = sizeof their_addr;
