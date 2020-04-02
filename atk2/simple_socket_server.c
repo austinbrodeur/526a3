@@ -110,11 +110,11 @@ int main(void)
 
         sin_size = sizeof their_addr;
         new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &sin_size);
+        sleep(10); // added wait for attack 2 denial of service
         if (new_fd == -1) {
             perror("accept");
             continue;
         }
-        sleep(10); // added wait for attack 2 denial of service
 
         inet_ntop(their_addr.ss_family,
             get_in_addr((struct sockaddr *)&their_addr),
