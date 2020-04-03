@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 
     // Data content
     data = datagram + sizeof(struct iphdr) + sizeof(struct tcphdr);
-    strcpy(data, "");
+    strcpy(data, "fake reply :)");
 
     // Address resolution
     strcpy(source_ip, source_adr);
@@ -118,16 +118,16 @@ int main(int argc, char *argv[])
     //TCP header
     tcph->source = htons(source_port);
     tcph->dest = htons(dest_port);
-    tcph->seq = 0;
+    tcph->seq = 1;
     tcph->ack_seq = 0;
     tcph->doff = 5; // tcp header size
     tcph->fin = 0;
     tcph->syn = 0;
-    tcph->rst = 1; // reset the connection
-    tcph->psh = 0;
-    tcph->ack = 0;
+    tcph->rst = 0; // reset the connection
+    tcph->psh = 1;
+    tcph->ack = 1;
     tcph->urg = 0;
-    tcph->window = htons(510);
+    tcph->window = htons(65280);
     tcph->check = 0;
     tcph->urg_ptr = 0;
 
