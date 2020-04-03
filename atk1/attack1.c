@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     //TCP header
     tcph->source = htons(54321);
     tcph->dest = htons(port);
-    tcph->seq = 0;
+    tcph->seq = 1;
     tcph->ack_seq = 0;
     tcph->doff = 5; // tcp header size
     tcph->fin = 0;

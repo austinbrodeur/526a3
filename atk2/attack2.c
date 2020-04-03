@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
     //TCP header
     tcph->source = htons(source_port);
     tcph->dest = htons(dest_port);
-    tcph->seq = 1;
+    tcph->seq = 0;
     tcph->ack_seq = 0;
     tcph->doff = 5; // tcp header size
     tcph->fin = 0;
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
     tcph->psh = 0;
     tcph->ack = 1;
     tcph->urg = 0;
-    tcph->window = htons(0); // max allowed window size
+    tcph->window = htons(510); // max allowed window size
     tcph->check = 0;
     tcph->urg_ptr = 0;
 
@@ -156,18 +156,17 @@ int main(int argc, char *argv[])
     }
 
 
-    while (1)
+    // while (1)
+    // {
+    if (sendto(s, datagram, iph->tot_len, 0, (struct sockaddr *) &sin, sizeof(sin)) < 0)
     {
-        sleep(1);
-        if (sendto(s, datagram, iph->tot_len, 0, (struct sockaddr *) &sin, sizeof(sin)) < 0)
-        {
-            perror("sento failed");
-        }
-        else
-        {
-            printf("Packet sent. Length: %d \n", iph->tot_len);
-        }
+        perror("sento failed");
     }
+    else
+    {
+        printf("Packet sent. Length: %d \n", iph->tot_len);
+    }
+    //}
 
     return 0;
 }
